@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Env files
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+
+# Misc
+*.tgz
+
+# Keep example files
+!.env.example
