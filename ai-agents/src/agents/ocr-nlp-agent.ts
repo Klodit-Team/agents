@@ -42,19 +42,21 @@ try {
   const pieces = asArray(piecesPayload);
 
   for (const piece of pieces) {
-    const document = piece.document as Record<string, unknown> | undefined;
+    const record = piece as Record<string, unknown>;
+    const document = record.document as Record<string, unknown> | undefined;
     const documentId =
-      (piece.documentId as string | undefined) ??
-      (piece.document_id as string | undefined) ??
+      (record.documentId as string | undefined) ??
+      (record.document_id as string | undefined) ??
       (document?.id as string | undefined) ??
-      (piece.id as string | undefined);
+      (record.id as string | undefined);
     if (!documentId) {
       continue;
     }
 
-    const pieceId = (piece.pieceId as string | undefined) ??
-      (piece.piece_id as string | undefined) ??
-      (piece.id as string | undefined);
+    const pieceId =
+      (record.pieceId as string | undefined) ??
+      (record.piece_id as string | undefined) ??
+      (record.id as string | undefined);
 
     const docRef = await callTool<Record<string, unknown> | string>(
       documentsConn.client,

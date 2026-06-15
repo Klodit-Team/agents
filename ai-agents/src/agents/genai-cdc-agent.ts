@@ -83,7 +83,21 @@ try {
     horodatage: new Date().toISOString(),
   });
 
-  console.log(JSON.stringify({ draft: finalDraft }));
+  const draftText = typeof finalDraft === "string" ? finalDraft : JSON.stringify(finalDraft);
+  const correctedText = hasBias
+    ? draftText
+    : undefined;
+  const originalText = hasBias
+    ? (typeof draft === "string" ? draft : JSON.stringify(draft))
+    : draftText;
+
+  console.log(
+    JSON.stringify({
+      draft: originalText,
+      biasDetected: hasBias,
+      ...(correctedText !== undefined ? { correctedDraft: correctedText } : {}),
+    }),
+  );
 } finally {
   await closeAll([aoConn, llmConn, auditConn]);
 }
