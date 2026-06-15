@@ -1,0 +1,27 @@
+name: Deploy Agents to GCP
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GCP via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USERNAME }}
+          key: ${{ secrets.GCP_SSH_KEY }}
+          passphrase: ${{ secrets.GCP_PASSPHRASE }}
+          script: |
+            echo "🚀 Starting Deployment for agents..."
+            cd ~/agents
+            git pull
+            cd ~/al-mizan-deployments
+            docker compose up -d --build agents
+            echo "✅ Deployment Successful!"
