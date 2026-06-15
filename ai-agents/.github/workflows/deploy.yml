@@ -19,9 +19,9 @@ jobs:
           key: ${{ secrets.GCP_SSH_KEY }}
           passphrase: ${{ secrets.GCP_PASSPHRASE }}
           script: |
-            echo "🚀 Starting Deployment for agents..."
-            cd ~/agents
+            echo "🚀 Starting Deployment for ai-agents..."
+            cd ~/ai-agents
             git pull
             cd ~/al-mizan-deployments
-            docker compose up -d --build agents
+            make up-ai
             echo "✅ Deployment Successful!"
