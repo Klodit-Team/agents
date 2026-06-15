@@ -15,10 +15,10 @@ RUN for dir in /workspace/mcp/*/; do \
     done
 
 # Copy agents source code and install dependencies
-COPY ai-agents/ai-agents/package*.json ./
+COPY ai-agents/package*.json ./
 RUN npm ci --legacy-peer-deps
 
-COPY ai-agents/ai-agents/src ./src
+COPY ai-agents/src ./src
 
 # The agent will be started via docker-compose command override
 CMD ["sh"]
