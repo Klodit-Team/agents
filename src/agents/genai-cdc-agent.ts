@@ -3,7 +3,7 @@ import { callTool } from "../shared/tooling.js";
 
 const aoId = process.env.AO_ID;
 const sectionType = process.env.SECTION_TYPE;
-const userPrompt = process.env.USER_PROMPT ?? "";
+const userPrompt = process.env.USER_PROMPT || "Rédiger le projet de cette section.";
 const sensitivity =
   (process.env.LLM_SENSITIVITY as
     | "highly_sensitive"

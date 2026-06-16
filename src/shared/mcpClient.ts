@@ -45,9 +45,13 @@ export async function connectMcp(prefix: string): Promise<McpConnection> {
   const cwd = process.env[`${prefix}_CWD`];
   const envExtra = parseEnvJson(process.env[`${prefix}_ENV_JSON`]);
 
+  const baseEnv = Object.fromEntries(
+    Object.entries(process.env).filter(([_, v]) => v !== undefined)
+  ) as Record<string, string>;
+
   const env = envExtra
-    ? { ...getDefaultEnvironment(), ...envExtra }
-    : undefined;
+    ? { ...baseEnv, ...envExtra }
+    : baseEnv;
 
   const transport = new StdioClientTransport({
     command,
