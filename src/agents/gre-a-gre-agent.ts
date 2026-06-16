@@ -114,7 +114,7 @@ try {
     {
       sensitivity: "sensitive",
       prompt:
-        "Combine the justification score, risk classification, and organisation profile into a final decision. Return JSON {scoreConformite, recommandation, justificationIa, confianceScore}.",
+        "Combine the justification score, risk classification, and organisation profile into a final decision. Return strictly a JSON object with the following schema: { \"scoreConformite\": number (0-100), \"recommandation\": string (must be exactly 'ACCEPTER', 'REJETER', or 'DEMANDER_COMPLEMENTS'), \"justificationIa\": string, \"confianceScore\": number (0-100) }.",
       context: {
         justificationScore,
         risk,
