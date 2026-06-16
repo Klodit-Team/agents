@@ -126,10 +126,10 @@ try {
   await callTool(aoConn.client, "update_gre_a_gre_score", {
     gagId,
     modeleIa: "gre-a-gre-agent",
-    scoreConformite: (decision as Record<string, unknown>).scoreConformite,
+    scoreConformite: Number((decision as Record<string, unknown>).scoreConformite),
     recommandation: (decision as Record<string, unknown>).recommandation,
     justificationIa: (decision as Record<string, unknown>).justificationIa,
-    confianceScore: (decision as Record<string, unknown>).confianceScore,
+    confianceScore: Number((decision as Record<string, unknown>).confianceScore),
   });
 
   await callTool(auditConn.client, "log_ia_decision", {
