@@ -2,7 +2,7 @@ import { connectMcp, closeAll } from "../shared/mcpClient.js";
 import { callTool, asArray } from "../shared/tooling.js";
 
 const aoId = process.env.AO_ID;
-const confidenceThreshold = Number(process.env.ANOMALY_ALERT_THRESHOLD ?? "1");
+const confidenceThreshold = Number(process.env.ANOMALY_ALERT_THRESHOLD ?? "0.75");
 const relatedAoSetRaw = process.env.RELATED_AO_SET_JSON;
 
 if (!aoId) {
@@ -16,6 +16,13 @@ const relatedAoSet = relatedAoSetRaw
 const soumissionsConn = await connectMcp("MCP_SOUMISSIONS");
 const anomalyConn = await connectMcp("MCP_ANOMALY");
 const auditConn = await connectMcp("MCP_AUDIT");
+
+function severityForConfidence(confidence: number) {
+  if (confidence >= 0.9) return "CRITIQUE";
+  if (confidence >= confidenceThreshold) return "ELEVEE";
+  if (confidence >= 0.5) return "MOYENNE";
+  return "FAIBLE";
+}
 
 try {
   const soumissionsPayload = await callTool<unknown[]>(
@@ -101,19 +108,17 @@ try {
         confidence,
       });
 
-      if (confidence >= confidenceThreshold) {
-        await callTool(auditConn.client, "create_incident_ia", {
-          typeIncident: "ANOMALY",
-          entiteSource: "soumission",
-          entiteId: soumissionId,
-          modeleIa: "anomaly-model",
-          decisionIa: result.type,
-          ecartScore: confidence,
-          confianceIa: confidence,
-          gravite: "ELEVEE",
-          dateDetection: new Date().toISOString(),
-        });
-      }
+      await callTool(auditConn.client, "create_incident_ia", {
+        typeIncident: "ANOMALIE_SOUMISSION",
+        entiteSource: "soumissions",
+        entiteId: soumissionId,
+        modeleIa: "anomaly-agent",
+        decisionIa: `${result.type}: ${detail}`,
+        ecartScore: confidence,
+        confianceIa: confidence,
+        gravite: severityForConfidence(confidence),
+        dateDetection: new Date().toISOString(),
+      });
     }
   }
 
